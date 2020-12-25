@@ -1,0 +1,103 @@
+openapi: 3.0.2
+info:
+  title: FastAPI
+  version: 0.1.0
+paths:
+  /foo:
+    post:
+      summary: Foo
+      operationId: foo_foo_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HttpFooReq'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HttpFooResp'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvalidRequestError'
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HttpFooError'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnknownError'
+components:
+  schemas:
+    HttpFooError:
+      title: HttpFooError
+      required:
+        - code
+      type: object
+      properties:
+        code:
+          title: Code
+          enum:
+            - already_updated
+            - client_not_found
+          type: string
+      description: http 422
+    HttpFooReq:
+      title: HttpFooReq
+      required:
+        - x
+      type: object
+      properties:
+        x:
+          title: X
+          type: boolean
+    HttpFooResp:
+      title: HttpFooResp
+      required:
+        - result
+      type: object
+      properties:
+        result:
+          title: Result
+          type: boolean
+    InvalidRequestError:
+      title: InvalidRequestError
+      required:
+        - code
+        - details
+      type: object
+      properties:
+        code:
+          title: Code
+          enum:
+            - invalid_request
+          type: string
+        details:
+          title: Details
+          type: array
+          items:
+            type: object
+      description: http 400
+    UnknownError:
+      title: UnknownError
+      required:
+        - code
+      type: object
+      properties:
+        code:
+          title: Code
+          enum:
+            - unknown
+          type: string
+      description: http 500
